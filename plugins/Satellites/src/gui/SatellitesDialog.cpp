@@ -1401,7 +1401,7 @@ void SatellitesDialog::handleGroupChanges(QListWidgetItem* item)
 	{
 		// Harmonize the item with the rest...
 		flags ^= Qt::ItemIsEditable;
-		item->setFlags(flags | Qt::ItemIsUserCheckable | Qt::ItemIsTristate);
+		item->setFlags(flags | Qt::ItemIsUserCheckable | Qt::ItemIsAutoTristate);
 		item->setCheckState(Qt::Checked);
 		QString groupId = item->text().trimmed();
 		item->setData(Qt::UserRole, groupId);
@@ -1589,8 +1589,11 @@ void SatellitesDialog::savePredictedIridiumFlares()
 		}
 
 		QTextStream predictedIridiumFlaresList(&predictedIridiumFlares);
+		#if (QT_VERSION>=QT_VERSION_CHECK(6,0,0))
+		predictedIridiumFlaresList.setEncoding(QStringConverter::Utf8);
+		#else
 		predictedIridiumFlaresList.setCodec("UTF-8");
-
+		#endif
 		predictedIridiumFlaresList << iridiumFlaresHeader.join(delimiter) << StelUtils::getEndLineChar();
 
 		for (int i = 0; i < count; i++)
